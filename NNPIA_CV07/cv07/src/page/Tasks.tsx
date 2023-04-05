@@ -10,13 +10,14 @@ interface Props{
 }
 const Tasks = ({}: Props) => {
     const [taskList, setTaskList] = useState<Array<Task>>(tasks);
+    const baseURL = import.meta.env.VITE_BACKEND_URL;
     useEffect(()=>{
         fetchData();
 
     }, [])
 
     const fetchData = async () =>{
-        const result = await fetch("http://localhost:9000/api/v1/task")
+        const result = await (fetch(`${baseURL}/task`));
         const data = (await result.json() as Array<Task>);
         /*
         data.map(t: Task =>{
