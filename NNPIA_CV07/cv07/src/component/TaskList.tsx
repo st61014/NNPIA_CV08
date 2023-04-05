@@ -4,15 +4,17 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TaskCard from "./TaskCard";
 interface Props{
-    tasks: Array<Task>
+    taskList: Array<Task>
 }
-export const TaskList = ({tasks}: Props) =>{
+export const TaskList = ({taskList}: Props) =>{
 
-    const [taskList, setTaskList] = useState<Array<Task>>(tasks);
+    //const [taskList, setTaskList] = useState<Array<Task>>(tasks);
+
 
     const taskDoneHandle = (task: Task) =>{
-        setTaskList([...taskList]);
+        //setTaskList([...taskList]);
     }
+
     return <Container  maxWidth="sm">
         <Typography
             component="h1"

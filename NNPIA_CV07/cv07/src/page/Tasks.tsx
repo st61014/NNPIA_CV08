@@ -1,5 +1,5 @@
 import TaskCard from "../component/TaskCard";
-import {tasks} from "../data/init-data";
+import {Task, tasks} from "../data/init-data";
 import React, {useEffect, useState} from "react";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -9,16 +9,22 @@ interface Props{
 
 }
 const Tasks = ({}: Props) => {
+    const [taskList, setTaskList] = useState<Array<Task>>(tasks);
     useEffect(()=>{
         fetchData();
 
     }, [])
 
-    const fetchData = () =>{
-        const result = fetch("http://localhost:9000/api/v1/task")
-        console.log(result);
+    const fetchData = async () =>{
+        const result = await fetch("http://localhost:9000/api/v1/task")
+        const data = (await result.json() as Array<Task>);
+        /*
+        data.map(t: Task =>{
+        })
+        */
+        console.log(data);
     }
-return <TaskList tasks={tasks}/>
+return <TaskList taskList={taskList}/>
 
 }
 
