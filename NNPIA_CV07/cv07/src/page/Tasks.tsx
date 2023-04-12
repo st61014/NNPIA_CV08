@@ -1,32 +1,48 @@
-import TaskCard from "../component/TaskCard";
-import {Task, tasks} from "../data/init-data";
-import React, {useEffect, useState} from "react";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import {TaskList} from "../component/TaskList";
+import TaskList from "../component/TaskList";
+import {Task} from "../data/init-data";
+import {useEffect, useState} from "react";
 interface Props{
 
 }
-const Tasks = ({}: Props) => {
-    const [taskList, setTaskList] = useState<Array<Task>>(tasks);
-    const baseURL = import.meta.env.VITE_BACKEND_URL;
-    useEffect(()=>{
-        fetchData();
+const Tasks = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-    }, [])
+    const [tasks, setTasks] = useState<Task[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean | null>(false);
 
-    const fetchData = async () =>{
-        const result = await (fetch(`${baseURL}/task`));
-        const data = (await result.json() as Array<Task>);
-        /*
-        data.map(t: Task =>{
-        })
-        */
-        console.log(data);
-    }
-return <TaskList taskList={taskList}/>
+    useEffect(() => {
+        console.log(`State changed in ${Tasks.name}: ${isLoggedIn}`);
 
-}
+        if (isLoggedIn) {
+            setLoading(true);
+            fetchData();
+        }
+    }, [isLoggedIn]);
+
+    const fetchData = async () => {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+        let response = null;
+
+        try {
+            response = await fetch(`${backendUrl}/task`);
+        } catch (e : any) {
+            setError(e.message);
+            setTasks([]);
+        }
+
+        setLoading(false);
+        if (response && response.ok) {
+            const tasks = await response.json();
+            setTasks(tasks);
+        }
+    };
+
+    return <div className="tasks">
+        {error && <div className="alert alert-danger">{error}</div>}
+        {loading && <div className="alert alert-danger">loading</div>}
+        <TaskList tasks={tasks} />
+    </div>
+};
 
 export default Tasks;
